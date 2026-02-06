@@ -1,10 +1,8 @@
 pipeline {
     agent any
-
     tools {
         maven 'Maven' // Nom de l'outil configuré dans Jenkins
     }
-
     stages {
         stage('Clone') {
             steps {
@@ -12,32 +10,34 @@ pipeline {
                 checkout scm
             }
         }
-
         stage('Build') {
             steps {
                 echo 'Compilation du projet...'
-                sh 'mvn clean compile'
+                bat 'mvn clean compile'  // ✅ Changé de sh à bat
             }
         }
-
         stage('Test') {
             steps {
                 echo 'Exécution des tests...'
-                sh 'mvn test'
+                bat 'mvn test' 
             }
         }
-
         stage('Package') {
             steps {
                 echo 'Création du JAR...'
-                sh 'mvn package'
+                bat 'mvn package' 
             }
         }
     }
-
     post {
         always {
             echo 'Fin du pipeline Jenkins.'
+        }
+        success {
+            echo 'Build réussi !'
+        }
+        failure {
+            echo 'Build échoué !'
         }
     }
 }
